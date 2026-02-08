@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ediraw</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+<style>
+:root{--accent:#00f0c0}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+body{
+background:#000;color:#fff;
+scroll-behavior:smooth;
+cursor:none;
+}
+
+/* ================= CUSTOM CURSOR ================= */
+.cursor-dot{
+position:fixed;
+width:6px;height:6px;
+background:var(--accent);
+border-radius:50%;
+pointer-events:none;
+z-index:10000;
+transform:translate(-50%,-50%);
+}
+.cursor-ring{
+position:fixed;
+width:36px;height:36px;
+border:1.5px solid rgba(0,240,192,.6);
+border-radius:50%;
+pointer-events:none;
+z-index:9999;
+transform:translate(-50%,-50%);
+transition:.15s ease-out;
+}
+.cursor-hover{
+transform:translate(-50%,-50%) scale(1.8);
+border-color:var(--accent);
+}
+
+/* ================= GLOBAL ================= */
+section{padding:120px 80px}
+h2{font-size:48px;text-align:center;margin-bottom:10px}
+.subtitle{text-align:center;color:#aaa;margin-bottom:70px}
+a{text-decoration:none;color:inherit}
+
+/* ================= NAV ================= */
+nav{
+position:fixed;top:0;width:100%;
+display:flex;justify-content:space-between;
+padding:25px 80px;
+background:rgba(0,0,0,.6);
+backdrop-filter:blur(8px);
+z-index:1000
+}
+.logo{color:var(--accent);font-weight:700;letter-spacing:2px}
+.nav-links{display:flex;gap:40px;align-items:center}
+.nav-links a{color:#aaa;font-size:14px}
+.cta-nav{font-weight:600}
+
+/* ================= BUTTONS ================= */
+.btn,.cta-nav,button{
+position:relative;
+background:linear-gradient(120deg,#0fffd4,#00f0c0,#7fffe9,#00f0c0);
+background-size:300%;
+color:#000;
+padding:14px 26px;
+border-radius:8px;
+font-weight:600;
+border:none;
+cursor:pointer;
+overflow:hidden;
+transition:.35s cubic-bezier(.19,1,.22,1);
+}
+.btn:hover,.cta-nav:hover,button:hover{
+transform:translateY(-4px);
+box-shadow:0 20px 50px rgba(0,240,192,.45);
+}
+
+/* ================= HERO ================= */
+.hero{display:flex;height:100vh;align-items:center;padding:0 80px}
+.left{width:50%;z-index:2}
+.left h1{font-size:64px;line-height:1.1}
+.left span{border-bottom:4px solid var(--accent)}
+.stats{display:flex;gap:60px;margin-top:60px}
+.stats div{color:var(--accent);font-size:28px;font-weight:700}
+.stats span{display:block;color:#777;font-size:12px}
+canvas{position:absolute;right:0;top:0}
+
+/* ================= SERVICES ================= */
+.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.card{
+border:1px solid #222;padding:40px;background:#0a0a0a;
+transition:.5s cubic-bezier(.19,1,.22,1);
+}
+.card:hover{
+border-color:var(--accent);
+transform:translateY(-12px);
+box-shadow:0 0 40px rgba(0,240,192,.15)
+}
+
+/* ================= WHY ================= */
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px}
+.why-card{
+display:flex;gap:25px;padding:30px;
+background:#0a0a0a;border:1px solid #1c1c1c
+}
+.check{
+width:42px;height:42px;background:var(--accent);color:#000;
+display:flex;align-items:center;justify-content:center;font-weight:700
+}
+
+/* ================= HOW ================= */
+.steps{display:flex;justify-content:space-around;text-align:center}
+.step-circle{
+width:80px;height:80px;border-radius:50%;
+background:var(--accent);color:#000;font-size:28px;
+display:flex;align-items:center;justify-content:center;margin:0 auto 20px
+}
+
+/* ================= WORK ================= */
+.work-box{
+border:1px solid #222;padding:60px;text-align:center;background:#0a0a0a
+}
+
+/* ================= TESTIMONIAL ================= */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.test-card{border:1px solid #222;padding:35px;background:#0a0a0a}
+
+/* ================= FORM ================= */
+form{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+input{
+padding:14px;background:#0a0a0a;border:1px solid #222;color:#fff
+}
+input:focus{border-color:var(--accent);outline:none}
+
+/* ================= SCROLL ANIM ================= */
+.reveal{opacity:0;transform:translateY(60px);transition:1s cubic-bezier(.19,1,.22,1)}
+.reveal.show{opacity:1;transform:none}
+
+/* ================= MOBILE ================= */
+@media(max-width:900px){
+.hero{flex-direction:column}
+.left{width:100%}
+.service-grid,.why-grid,.test-grid{grid-template-columns:1fr}
+.steps{flex-direction:column;gap:40px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<nav>
+<div class="logo">EDIRAW</div>
+<div class="nav-links">
+<a href="#">Services</a>
+<a href="#">Work</a>
+<a href="#">Process</a>
+<a href="#book" class="cta-nav">Work With Us</a>
+</div>
+</nav>
+
+<section class="hero reveal">
+<div class="left">
+<h1>We Run Your<br>YouTube Backend<br>So You Can <span>Focus</span><br>on Creating</h1>
+<a href="#book" class="btn">Work With Us →</a>
+<div class="stats">
+<div>500+<span>Videos Produced</span></div>
+<div>50M+<span>Total Views</span></div>
+<div>75%<span>Avg Retention</span></div>
+</div>
+</div>
+<canvas id="sphereCanvas"></canvas>
+</section>
+
+<section class="reveal">
+<h2>Services That Scale Your Channel</h2>
+<p class="subtitle">Everything you need to run a professional YouTube operation</p>
+<div class="service-grid">
+<div class="card">Script Writing for High Retention Videos</div>
+<div class="card">Professional Video Editing</div>
+<div class="card">High CTR Thumbnail Design</div>
+<div class="card">Deep Research for Documentary Content</div>
+</div>
+</section>
+
+<section class="reveal">
+<h2>Why Choose Us</h2>
+<p class="subtitle">We’re not just a service provider — we’re your growth partner</p>
+<div class="why-grid">
+<div class="why-card"><div class="check">✓</div>Built for YouTube Growth</div>
+<div class="why-card"><div class="check">✓</div>Focus on Retention & CTR</div>
+<div class="why-card"><div class="check">✓</div>Team of Specialists</div>
+<div class="why-card"><div class="check">✓</div>Fast Delivery</div>
+</div>
+</section>
+
+<section class="reveal">
+<h2>How It Works</h2>
+<p class="subtitle">Simple, streamlined process</p>
+<div class="steps">
+<div><div class="step-circle">1</div>You Share Your Idea</div>
+<div><div class="step-circle">2</div>We Handle the Backend</div>
+<div><div class="step-circle">3</div>You Upload and Grow</div>
+</div>
+</section>
+
+<section class="reveal">
+<h2>Our Work</h2>
+<p class="subtitle">Results that speak for themselves</p>
+<div class="work-box">
+<p>Check out our complete portfolio showcasing the videos we’ve created for top creators</p><br>
+<a class="btn" href="https://ediraw.carrd.co/" target="_blank">View Our Portfolio ↗</a>
+</div>
+</section>
+
+<section class="reveal">
+<h2>What Creators Say</h2>
+<p class="subtitle">Real results from real creators</p>
+<div class="test-grid">
+<div class="test-card">“They transformed my channel from 3M to 5M subs in 8 months.”</div>
+<div class="test-card">“My retention went from 45% to 78%.”</div>
+<div class="test-card">“Best decision I made for my channel.”</div>
+</div>
+</section>
+
+<section id="book" class="reveal">
+<h2>Book a Call</h2>
+<p class="subtitle">Let’s scale your channel</p>
+<form>
+<input placeholder="Your Name" required>
+<input placeholder="Channel Name" required>
+<input placeholder="Channel Niche" required>
+<input type="email" placeholder="Email Address" required>
+<button type="submit">Book Now</button>
+</form>
+</section>
+
+<script>
+/* SCROLL REVEAL */
+const observer=new IntersectionObserver(e=>{
+e.forEach(x=>x.isIntersecting&&x.target.classList.add("show"))
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* CURSOR */
+const dot=document.querySelector('.cursor-dot');
+const ring=document.querySelector('.cursor-ring');
+let x=0,y=0,rx=0,ry=0;
+
+window.addEventListener('mousemove',e=>{
+x=e.clientX;y=e.clientY;
+dot.style.left=x+'px';dot.style.top=y+'px';
+});
+(function animate(){
+rx+=(x-rx)*.15; ry+=(y-ry)*.15;
+ring.style.left=rx+'px'; ring.style.top=ry+'px';
+requestAnimationFrame(animate);
+})();
+
+document.querySelectorAll('a,button').forEach(el=>{
+el.addEventListener('mouseenter',()=>ring.classList.add('cursor-hover'));
+el.addEventListener('mouseleave',()=>ring.classList.remove('cursor-hover'));
+});
+
+/* THREE SPHERE (UNCHANGED) */
+const canvas=document.getElementById('sphereCanvas');
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,1000);
+camera.position.z=7;
+const renderer=new THREE.WebGLRenderer({canvas,alpha:true});
+renderer.setSize(innerWidth,innerHeight);
+const group=new THREE.Group();scene.add(group);
+const geo=new THREE.SphereGeometry(.12,12,12);
+for(let i=0;i<500;i++){
+const c=new THREE.Color().setHSL(.45+Math.random()*.1,1,.5);
+const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.5}));
+const r=3;
+const phi=Math.acos(-1+2*i/500);
+const theta=Math.sqrt(500*Math.PI)*phi;
+m.position.setFromSphericalCoords(r,phi,theta);
+group.add(m);
+}
+scene.add(new THREE.PointLight(0x00f0c0,2,50));
+(function a(){requestAnimationFrame(a);group.rotation.y+=.0015;renderer.render(scene,camera)})();
+</script>
+
+</body>
+</html>
